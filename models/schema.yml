@@ -1,0 +1,35 @@
+version: 2
+
+models:
+
+    - name: sales
+      description: view of table
+      tests:
+        - unique:
+            column_name: "(orders_id || '-' || products_id)"
+            
+      columns:
+          - name: orders_id
+            description: primary key
+            tests : 
+            - not_null 
+
+          - name: products_id
+            description: id for each product available
+            tests : 
+            - not_null 
+
+          - name: qty
+
+          - name: turnover
+            description: revenue from sales
+            tests : 
+            - not_null 
+
+          - name: purchase_cost
+            description: cost of product
+            tests : 
+            - not_null 
+
+          - name: margin
+            description: turnover-purchase_cost
