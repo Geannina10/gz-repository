@@ -33,3 +33,16 @@ models:
 
           - name: margin
             description: turnover-purchase_cost
+
+    - name: orders
+      description: view of table
+      tests:
+        - unique:
+            column_name: "(orders_id)"
+            
+      columns:
+          - name: orders_id
+            description: primary key
+            tests : 
+            - not_null 
+
