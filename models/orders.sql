@@ -5,11 +5,12 @@
 
 WITH
 
-  sales AS (SELECT * FROM `gz_dev_1_transaction.sales`)
+ sales AS (SELECT * FROM {{ ref('sales') }} )
+ -- sales AS (SELECT * FROM `gz_raw_data.raw_gz_sales`)--
 
-  ,ship AS (SELECT * FROM `gz_raw_data.raw_gz_ship`)
+  ,ship AS (SELECT * FROM {{ ref('stg_ship') }} )
 
-   -- Aggregation --
+    -- Aggregation --
   ,orders_from_sales AS (
     SELECT
       orders_id
@@ -35,7 +36,7 @@ WITH
       -- log & ship metrics --
       ,shipping_fee
       ,ship_cost
-      ,logCost as log_cost
+      ,log_cost
     FROM orders_from_sales
     LEFT JOIN ship USING (orders_id))
 
@@ -43,7 +44,7 @@ WITH
   ,operational_margin AS (
     SELECT
       *
-      , IFNULL(CAST(product_margin AS FLOAT64), 0) + IFNULL(shipping_fee, 0) - IFNULL(CAST(logCost AS FLOAT64), 0) AS operational_margin
+      , product_margin  + shipping_fee - log_cost AS operational_margin
     FROM orders_from_sales
     LEFT JOIN ship USING (orders_id)
   )
